@@ -1,0 +1,1105 @@
+openapi: 3.0.3
+info:
+  title: PDV Orders API
+  version: 1.0.0
+  description: Documentação OpenAPI do endpoint `GET /api/pdv/v1/orders`.
+servers:
+  - url: https://erp.dimona.com.br/api
+    description: Produção
+tags:
+  - name: Orders
+    description: Pedidos de venda do PDV
+paths:
+  /pdv/v1/orders:
+    get:
+      tags:
+        - Orders
+      operationId: listPdvOrders
+      summary: Lista pedidos de venda do PDV
+      description: |
+        Retorna pedidos paginados em JSON, com os campos `data`, `message` e `metadata`.
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PerPage'
+        - $ref: '#/components/parameters/Search'
+        - $ref: '#/components/parameters/OrderIds'
+        - $ref: '#/components/parameters/BranchId'
+        - $ref: '#/components/parameters/CustomerId'
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/SellerId'
+        - $ref: '#/components/parameters/AttendanceUserId'
+        - $ref: '#/components/parameters/AttendanceAction'
+        - $ref: '#/components/parameters/SellingType'
+        - $ref: '#/components/parameters/StatusFilter'
+        - $ref: '#/components/parameters/Billed'
+        - $ref: '#/components/parameters/DownPayment'
+        - $ref: '#/components/parameters/Urgent'
+        - $ref: '#/components/parameters/Service'
+        - $ref: '#/components/parameters/PaymentMethods'
+        - $ref: '#/components/parameters/Nasajon'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+        - $ref: '#/components/parameters/StartBilledDate'
+        - $ref: '#/components/parameters/EndBilledDate'
+        - $ref: '#/components/parameters/DeliveryStartDate'
+        - $ref: '#/components/parameters/DeliveryEndDate'
+        - $ref: '#/components/parameters/TransferBuilding'
+        - $ref: '#/components/parameters/ProductionBuilding'
+        - $ref: '#/components/parameters/ForShipping'
+        - $ref: '#/components/parameters/ForShippingAllBuildings'
+        - $ref: '#/components/parameters/HideFinished'
+        - $ref: '#/components/parameters/IssueFutureDeliveryInvoice'
+        - $ref: '#/components/parameters/PaymentValue'
+        - $ref: '#/components/parameters/DeliveryType'
+        - $ref: '#/components/parameters/WithDetails'
+        - $ref: '#/components/parameters/SortBy'
+        - $ref: '#/components/parameters/SortDirection'
+        - $ref: '#/components/parameters/InvoiceableId'
+        - $ref: '#/components/parameters/InvoiceableType'
+        - $ref: '#/components/parameters/SellingChannel'
+        - $ref: '#/components/parameters/ContactOrigin'
+        - $ref: '#/components/parameters/SalesPointId'
+      responses:
+        '200':
+          description: Pedidos encontrados com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SellingsIndexResponse'
+              examples:
+                success:
+                  summary: Resposta paginada com um pedido
+                  value:
+                    data:
+                      current_page: 1
+                      data:
+                        - id: 123
+                          user_id: 8
+                          customer_id: 42
+                          invoiceable_id: 42
+                          invoiceable_type: App\Customer
+                          status_id: 7
+                          billed: false
+                          billed_at: null
+                          is_urgent: true
+                          is_pre_order: false
+                          issue_future_delivery_invoice: false
+                          branch_id: 5
+                          building_id: 3
+                          sales_point_id: 9
+                          nasajon_id: '987654'
+                          delivery_date: '2026-06-25'
+                          created_at: '2026-06-23T14:30:00Z'
+                          updated_at: '2026-06-23T14:45:00Z'
+                          called: 0
+                          available_statuses:
+                            - id: 8
+                              name: Pedido aguardando expedição
+                          down_payments_paid: true
+                          paid: down_payments
+                          editable: true
+                          can_change_delivery_date: true
+                          can_be_billed: true
+                          freight_value: 2500
+                          freight_name: Entrega expressa
+                          freight_business_days: 2
+                          items_price: 10500
+                          urgency_price: 1500
+                          total_discount: 500
+                          total_down_payments: 3000
+                          total: 11500
+                          total_with_freight: 14000
+                          in_progress_productions_ids:
+                            - 301
+                            - 302
+                          customer:
+                            id: 42
+                            name: Cliente Exemplo
+                          status:
+                            id: 7
+                            name: Em produção
+                          seller:
+                            id: 8
+                            cpf: '11122233344'
+                            name: Vendedor Exemplo
+                          branch:
+                            id: 5
+                            cnpj: '12345678000199'
+                          building:
+                            id: 3
+                            name: Expedição
+                          invoiceable:
+                            id: 42
+                            name: Cliente Exemplo
+                          sales_point:
+                            id: 9
+                            branch_id: 5
+                            name: Caixa 01
+                          valid_payment_methods:
+                            - id: 2
+                              name: PIX
+                              pivot:
+                                id: 88
+                                installments: 1
+                                due_date: null
+                                due_days: 0
+                                is_down_payment: true
+                                pix: copia-e-cola
+                                pix_expiration: '2026-06-23T15:00:00Z'
+                                pix_value: 3000
+                                status: pago
+                                txid: txid-123
+                                value: 3000
+                          sequences:
+                            - id: 1001
+                              selling_id: 123
+                          freight:
+                            id: 11
+                            name: Entrega expressa
+                            price: 2500
+                            business_days: 2
+                      first_page_url: /api/pdv/v1/orders?page=1
+                      from: 1
+                      last_page: 1
+                      last_page_url: /api/pdv/v1/orders?page=1
+                      links:
+                        - url: null
+                          label: '&laquo; Previous'
+                          active: false
+                        - url: /api/pdv/v1/orders?page=1
+                          label: '1'
+                          active: true
+                        - url: null
+                          label: 'Next &raquo;'
+                          active: false
+                      next_page_url: null
+                      path: /api/pdv/v1/orders
+                      per_page: 10
+                      prev_page_url: null
+                      to: 1
+                      total: 1
+                    message: Vendas encontradas com sucesso
+                    metadata: null
+        '401':
+          description: Requisição sem autenticação válida
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                unauthenticated:
+                  value:
+                    message: Unauthenticated.
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: 'Token Bearer da API (`Authorization: Bearer {token}`).'
+  parameters:
+    Page:
+      name: page
+      in: query
+      description: Página da listagem.
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+      example: 1
+    PerPage:
+      name: per_page
+      in: query
+      description: Quantidade de pedidos por página. Se omitido, o valor padrão é `10`.
+      schema:
+        type: integer
+        minimum: 1
+        default: 10
+      example: 25
+    Search:
+      name: search
+      in: query
+      description: Busca textual por ID do pedido, `nasajon_id`, cliente, vendedor, status ou faturado para.
+      schema:
+        type: string
+      example: cliente exemplo
+    OrderIds:
+      name: id
+      in: query
+      description: |
+        Filtra por um ou mais IDs de pedido.
+        Para múltiplos valores, use `id[]=1&id[]=2`.
+      schema:
+        type: array
+        items:
+          type: integer
+      style: form
+      explode: true
+      example:
+        - 123
+        - 124
+    BranchId:
+      name: branch_id
+      in: query
+      description: Filtra pela loja do pedido.
+      schema:
+        type: integer
+      example: 5
+    CustomerId:
+      name: customer_id
+      in: query
+      description: Filtra pelo cliente do pedido.
+      schema:
+        type: integer
+      example: 42
+    UserId:
+      name: user_id
+      in: query
+      description: Filtra pelo usuário vendedor (`sellings.user_id`).
+      schema:
+        type: integer
+      example: 8
+    SellerId:
+      name: seller
+      in: query
+      description: Pode ser usado como alias de `user_id`.
+      schema:
+        type: integer
+      example: 8
+    AttendanceUserId:
+      name: attendance_user_id
+      in: query
+      description: Filtra pedidos com logs de atendimento feitos por um usuário específico.
+      schema:
+        type: integer
+      example: 17
+    AttendanceAction:
+      name: attendance_action
+      in: query
+      description: Tipo do log de atendimento usado no filtro.
+      schema:
+        type: string
+        enum:
+          - startAttendance
+      example: startAttendance
+    SellingType:
+      name: type
+      in: query
+      description: Tipo lógico do pedido. `pre_order` ativa o filtro de pré-venda; `order` representa pedido normal.
+      schema:
+        type: string
+        enum:
+          - order
+          - pre_order
+      example: order
+    StatusFilter:
+      name: status
+      in: query
+      description: |
+        Filtra por um ou mais IDs de status.
+        Para múltiplos valores, use `status[]=1&status[]=2`.
+      schema:
+        type: array
+        items:
+          type: integer
+      style: form
+      explode: true
+      example:
+        - 7
+        - 8
+    Billed:
+      name: billed
+      in: query
+      description: Filtra pedidos faturados ou não faturados.
+      schema:
+        type: boolean
+      example: false
+    DownPayment:
+      name: down_payment
+      in: query
+      description: Filtra pedidos com sinal pago (`true`) ou sem sinal pago (`false`).
+      schema:
+        type: boolean
+      example: true
+    Urgent:
+      name: urgent
+      in: query
+      description: Filtra pedidos urgentes.
+      schema:
+        type: boolean
+      example: true
+    Service:
+      name: service
+      in: query
+      description: Filtra pedidos que possuem (`true`) ou não possuem (`false`) serviços nas sequências.
+      schema:
+        type: boolean
+      example: false
+    PaymentMethods:
+      name: payment
+      in: query
+      description: |
+        Filtra por um ou mais IDs de meios de pagamento válidos.
+        Para múltiplos valores, use `payment[]=1&payment[]=2`.
+      schema:
+        type: array
+        items:
+          type: integer
+      style: form
+      explode: true
+      example:
+        - 2
+        - 5
+    Nasajon:
+      name: nasajon
+      in: query
+      description: Filtra pedidos sincronizados (`true`) ou não sincronizados (`false`) com a Nasajon.
+      schema:
+        type: boolean
+      example: true
+    StartDate:
+      name: start_date
+      in: query
+      description: Filtra pedidos criados a partir desta data.
+      schema:
+        type: string
+        format: date
+      example: '2026-06-01'
+    EndDate:
+      name: end_date
+      in: query
+      description: Filtra pedidos criados até esta data.
+      schema:
+        type: string
+        format: date
+      example: '2026-06-30'
+    StartBilledDate:
+      name: start_billed_date
+      in: query
+      description: Filtra pedidos faturados a partir desta data.
+      schema:
+        type: string
+        format: date
+      example: '2026-06-01'
+    EndBilledDate:
+      name: end_billed_date
+      in: query
+      description: Filtra pedidos faturados até esta data.
+      schema:
+        type: string
+        format: date
+      example: '2026-06-30'
+    DeliveryStartDate:
+      name: delivery_start_date
+      in: query
+      description: Filtra pedidos com data de entrega a partir desta data.
+      schema:
+        type: string
+        format: date
+      example: '2026-06-24'
+    DeliveryEndDate:
+      name: delivery_end_date
+      in: query
+      description: Filtra pedidos com data de entrega até esta data.
+      schema:
+        type: string
+        format: date
+      example: '2026-06-30'
+    TransferBuilding:
+      name: transfer_building
+      in: query
+      description: |
+        Filtra por um ou mais IDs de prédio de separação nas sequências.
+        Para múltiplos valores, use `transfer_building[]=1&transfer_building[]=2`.
+      schema:
+        type: array
+        items:
+          type: integer
+      style: form
+      explode: true
+      example:
+        - 3
+        - 4
+    ProductionBuilding:
+      name: production_building
+      in: query
+      description: |
+        Filtra por um ou mais IDs de prédio das produções vinculadas à sequência.
+        Para múltiplos valores, use `production_building[]=1&production_building[]=2`.
+      schema:
+        type: array
+        items:
+          type: integer
+      style: form
+      explode: true
+      example:
+        - 6
+    ForShipping:
+      name: for_shipping
+      in: query
+      description: |
+        Ativa o modo de expedição e filtra pedidos por transferências pendentes para um prédio de destino.
+        Quando `for_shipping_all_buildings=true`, este campo ainda ativa o modo de expedição,
+        mas o filtro por prédio deixa de ser aplicado.
+      schema:
+        type: integer
+      example: 3
+    ForShippingAllBuildings:
+      name: for_shipping_all_buildings
+      in: query
+      description: Ignora a restrição de prédio no filtro de expedição.
+      schema:
+        type: boolean
+      example: false
+    HideFinished:
+      name: hide_finished
+      in: query
+      description: No modo de expedição, oculta pedidos totalmente entregues e recebidos.
+      schema:
+        type: boolean
+      example: true
+    IssueFutureDeliveryInvoice:
+      name: issue_future_delivery_invoice
+      in: query
+      description: Filtra pedidos marcados para emissão de nota de entrega futura.
+      schema:
+        type: boolean
+      example: false
+    PaymentValue:
+      name: payment_value
+      in: query
+      description: Filtra por valor exato, em centavos, de um meio de pagamento válido.
+      schema:
+        type: integer
+        minimum: 0
+      example: 3000
+    DeliveryType:
+      name: delivery_type
+      in: query
+      description: Filtra por retirada (`pickup`) ou entrega (`delivery`).
+      schema:
+        type: string
+        enum:
+          - pickup
+          - delivery
+      example: delivery
+    WithDetails:
+      name: with_details
+      in: query
+      description: Expande a relação `sequences` com detalhes adicionais de produção e itens.
+      schema:
+        type: boolean
+      example: true
+    SortBy:
+      name: sort_by
+      in: query
+      description: |
+        Campo de ordenação. Alguns valores possuem ordenação específica:
+        - `invoiceable`
+        - `seller`
+        - `status`
+
+        Outros valores podem ser usados conforme os campos disponíveis do recurso.
+      schema:
+        type: string
+      example: created_at
+    SortDirection:
+      name: sort_direction
+      in: query
+      description: Direção da ordenação.
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+      example: desc
+    InvoiceableId:
+      name: invoiceable_id
+      in: query
+      description: ID do destinatário de faturamento (`invoiceable`). Requer `invoiceable_type`.
+      schema:
+        type: integer
+      example: 42
+    InvoiceableType:
+      name: invoiceable_type
+      in: query
+      description: Tipo do faturado para. Usado junto com `invoiceable_id`.
+      schema:
+        type: string
+    SellingChannel:
+      name: selling_channel
+      in: query
+      description: |
+        Filtra por um ou mais canais de venda.
+        Use o literal `null` para incluir registros sem canal definido.
+        Para múltiplos valores, use `selling_channel[]=1&selling_channel[]=null`.
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+      example:
+        - '1'
+        - 'null'
+    ContactOrigin:
+      name: contact_origin
+      in: query
+      description: |
+        Filtra por uma ou mais origens de contato.
+        Use o literal `null` para incluir registros sem origem definida.
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+      example:
+        - '2'
+        - 'null'
+    SalesPointId:
+      name: sales_point_id
+      in: query
+      description: |
+        Filtra por um ou mais pontos de venda.
+        Use o literal `null` para incluir registros sem ponto de venda.
+      schema:
+        type: array
+        items:
+          type: string
+      style: form
+      explode: true
+      example:
+        - '9'
+        - 'null'
+  schemas:
+    SellingsIndexResponse:
+      type: object
+      required:
+        - data
+        - message
+        - metadata
+      properties:
+        data:
+          $ref: '#/components/schemas/SellingPagination'
+        message:
+          type: string
+          example: Vendas encontradas com sucesso
+        metadata:
+          nullable: true
+          description: Campo adicional da resposta. Nesta operação normalmente vem `null`.
+          example: null
+    SellingPagination:
+      type: object
+      required:
+        - current_page
+        - data
+        - last_page
+        - path
+        - per_page
+        - total
+      properties:
+        current_page:
+          type: integer
+          example: 1
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SellingOrderSummary'
+        first_page_url:
+          type: string
+          nullable: true
+          example: /api/pdv/v1/orders?page=1
+        from:
+          type: integer
+          nullable: true
+          example: 1
+        last_page:
+          type: integer
+          example: 3
+        last_page_url:
+          type: string
+          nullable: true
+          example: /api/pdv/v1/orders?page=3
+        links:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaginationLink'
+        next_page_url:
+          type: string
+          nullable: true
+          example: /api/pdv/v1/orders?page=2
+        path:
+          type: string
+          example: /api/pdv/v1/orders
+        per_page:
+          type: integer
+          example: 10
+        prev_page_url:
+          type: string
+          nullable: true
+          example: null
+        to:
+          type: integer
+          nullable: true
+          example: 10
+        total:
+          type: integer
+          example: 27
+    SellingOrderSummary:
+      type: object
+      additionalProperties: true
+      description: |
+        Resumo do pedido retornado na listagem.
+
+        O schema abaixo documenta os campos retornados por padrão e os principais
+        campos calculados. O endpoint pode incluir propriedades adicionais conforme
+        os filtros informados.
+      properties:
+        id:
+          type: integer
+          example: 123
+        user_id:
+          type: integer
+          nullable: true
+          example: 8
+        customer_id:
+          type: integer
+          nullable: true
+          example: 42
+        customer_cpf_cnpj:
+          type: string
+          nullable: true
+          example: '12345678901'
+        invoiceable_id:
+          type: integer
+          nullable: true
+          example: 42
+        invoiceable_type:
+          type: string
+          nullable: true
+        status_id:
+          type: integer
+          example: 7
+        end_user:
+          type: boolean
+          example: false
+        issue_future_delivery_invoice:
+          type: boolean
+          example: false
+        billed:
+          type: boolean
+          example: false
+        billed_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        is_urgent:
+          type: boolean
+          example: true
+        payment_method_id:
+          type: integer
+          nullable: true
+          example: null
+        pricetable_id:
+          type: integer
+          nullable: true
+          example: 4
+        branch_id:
+          type: integer
+          example: 5
+        selling_channel_id:
+          type: integer
+          nullable: true
+          example: 1
+        address_id:
+          type: integer
+          nullable: true
+          example: 77
+        building_id:
+          type: integer
+          nullable: true
+          example: 3
+        sales_point_id:
+          type: integer
+          nullable: true
+          example: 9
+        nasajon_id:
+          type: string
+          nullable: true
+          example: '987654'
+        delivery_date:
+          type: string
+          format: date
+          nullable: true
+          example: '2026-06-25'
+        notes:
+          type: string
+          nullable: true
+          example: null
+        version:
+          type: integer
+          nullable: true
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: '2026-06-23T14:30:00Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2026-06-23T14:45:00Z'
+        is_pre_order:
+          type: boolean
+          example: false
+        is_foreign_customer:
+          type: boolean
+          example: false
+        called:
+          type: integer
+          enum:
+            - 0
+            - 1
+          example: 0
+        available_statuses:
+          type: array
+          items:
+            $ref: '#/components/schemas/StatusSummary'
+        down_payments_paid:
+          type: boolean
+          example: true
+        paid:
+          type: string
+          nullable: true
+          enum:
+            - all
+            - down_payments
+          example: down_payments
+        editable:
+          type: boolean
+          example: true
+        can_change_delivery_date:
+          type: boolean
+          example: true
+        can_be_billed:
+          type: boolean
+          description: Campo incluído somente quando o filtro `for_shipping` é usado.
+          example: true
+        freight_value:
+          type: integer
+          nullable: true
+          description: Valor do frete em centavos.
+          example: 2500
+        freight_name:
+          type: string
+          nullable: true
+          example: Entrega expressa
+        freight_business_days:
+          type: integer
+          nullable: true
+          example: 2
+        items_price:
+          type: integer
+          description: Soma dos itens em centavos, sem desconto.
+          example: 10500
+        urgency_price:
+          type: integer
+          description: Total de urgência em centavos.
+          example: 1500
+        total_discount:
+          type: integer
+          description: Total de desconto em centavos.
+          example: 500
+        total_down_payments:
+          type: integer
+          description: Total de sinais em centavos.
+          example: 3000
+        total:
+          type: integer
+          description: Total do pedido em centavos, sem frete.
+          example: 11500
+        total_with_freight:
+          type: integer
+          description: Total do pedido em centavos, com frete.
+          example: 14000
+        in_progress_productions_ids:
+          type: array
+          items:
+            type: integer
+          example:
+            - 301
+            - 302
+        customer:
+          $ref: '#/components/schemas/CustomerSummary'
+        status:
+          $ref: '#/components/schemas/StatusSummary'
+        seller:
+          $ref: '#/components/schemas/SellerSummary'
+        branch:
+          $ref: '#/components/schemas/BranchSummary'
+        building:
+          $ref: '#/components/schemas/BuildingSummary'
+        invoiceable:
+          $ref: '#/components/schemas/InvoiceableSummary'
+        sales_point:
+          $ref: '#/components/schemas/SalesPointSummary'
+        valid_payment_methods:
+          type: array
+          description: Meios de pagamento válidos do pedido.
+          items:
+            $ref: '#/components/schemas/PaymentMethodSummary'
+        sequences:
+          type: array
+          items:
+            $ref: '#/components/schemas/SequenceSummary'
+        freight:
+          $ref: '#/components/schemas/FreightSummary'
+    CustomerSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: Cliente Exemplo
+    InvoiceableSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 42
+        name:
+          type: string
+          example: Cliente Exemplo
+    StatusSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 7
+        name:
+          type: string
+          example: Em produção
+    SellerSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 8
+        cpf:
+          type: string
+          nullable: true
+          example: '11122233344'
+        name:
+          type: string
+          example: Vendedor Exemplo
+    BranchSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 5
+        cnpj:
+          type: string
+          nullable: true
+          example: '12345678000199'
+    BuildingSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 3
+        name:
+          type: string
+          example: Expedição
+    SalesPointSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 9
+        branch_id:
+          type: integer
+          example: 5
+        name:
+          type: string
+          example: Caixa 01
+    FreightSummary:
+      type: object
+      nullable: true
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 11
+        name:
+          type: string
+          example: Entrega expressa
+        price:
+          type: integer
+          nullable: true
+          example: 2500
+        business_days:
+          type: integer
+          nullable: true
+          example: 2
+        method_id:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+          example: 11
+        carrier_cnpj:
+          type: string
+          nullable: true
+          example: '12345678000199'
+    PaymentMethodSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 2
+        name:
+          type: string
+          example: PIX
+        pivot:
+          $ref: '#/components/schemas/PaymentMethodSellingPivot'
+    PaymentMethodSellingPivot:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+          example: 88
+        nasajon_uuid:
+          type: string
+          nullable: true
+          example: null
+        id_titulo:
+          oneOf:
+            - type: integer
+            - type: string
+          nullable: true
+          example: null
+        installments:
+          type: integer
+          nullable: true
+          example: 1
+        due_date:
+          type: string
+          format: date
+          nullable: true
+          example: null
+        due_days:
+          type: integer
+          nullable: true
+          example: 0
+        value:
+          type: integer
+          nullable: true
+          description: Valor em centavos.
+          example: 3000
+        is_down_payment:
+          type: boolean
+          example: true
+        status:
+          type: string
+          nullable: true
+          example: pago
+        txid:
+          type: string
+          nullable: true
+          example: txid-123
+        pix:
+          type: string
+          nullable: true
+          example: copia-e-cola
+        pix_expiration:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2026-06-23T15:00:00Z'
+        pix_value:
+          type: integer
+          nullable: true
+          description: Valor do PIX em centavos.
+          example: 3000
+    SequenceSummary:
+      type: object
+      additionalProperties: true
+      description: |
+        Resumo da sequência. Quando `with_details=true`, a resposta pode incluir
+        `sequence_details` e `cart_sellings`. Em consultas de expedição, a resposta
+        também pode incluir `transfers`.
+      properties:
+        id:
+          type: integer
+          example: 1001
+        name:
+          type: string
+          nullable: true
+          example: Frente camiseta
+        selling_id:
+          type: integer
+          example: 123
+        customer_id:
+          type: integer
+          nullable: true
+          example: 42
+        observation:
+          type: string
+          nullable: true
+          example: null
+        sequence_details:
+          type: array
+          items:
+            $ref: '#/components/schemas/FreeFormObject'
+        cart_sellings:
+          type: array
+          items:
+            $ref: '#/components/schemas/FreeFormObject'
+        transfers:
+          type: array
+          items:
+            $ref: '#/components/schemas/FreeFormObject'
+    PaginationLink:
+      type: object
+      properties:
+        url:
+          type: string
+          nullable: true
+          example: /api/pdv/v1/orders?page=1
+        label:
+          type: string
+          example: '1'
+        active:
+          type: boolean
+          example: true
+    FreeFormObject:
+      type: object
+      additionalProperties: true
+    ApiErrorResponse:
+      type: object
+      additionalProperties: true
+      properties:
+        message:
+          type: string
+          example: Unauthenticated.
