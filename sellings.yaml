@@ -1,0 +1,199 @@
+openapi: 3.0.3
+info:
+  title: Consulta de Pedidos API
+  version: 1.0.0
+  description: |
+    API para consultar o status dos três pedidos mais recentes associados a um
+    CPF, CNPJ ou identificador de pedido.
+servers:
+  - url: https://erp.dimona.com.br/api
+    description: Produção
+tags:
+  - name: Pedidos
+    description: Consulta de status de pedidos
+paths:
+  /external/sellings/{valor}:
+    get:
+      tags:
+        - Pedidos
+      operationId: listLatestOrders
+      summary: Consulta os três pedidos mais recentes
+      description: |
+        Retorna no máximo os três pedidos mais recentes associados ao valor informado.
+
+        Regras para `valor`:
+        - 11 dígitos: CPF.
+        - 14 dígitos: CNPJ.
+        - Outro número positivo: ID de pedido.
+        - Formato `000-000-000`: ID formatado de pedido.
+
+        CPF e CNPJ devem ser enviados sem máscara e passar pela validação dos
+        respectivos dígitos verificadores. Uma consulta sem resultados retorna
+        `200` com `data: []`.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: valor
+          in: path
+          required: true
+          description: CPF, CNPJ, ID numérico ou ID formatado de pedido.
+          schema:
+            oneOf:
+              - type: string
+                pattern: '^\d+$'
+                description: CPF, CNPJ ou ID numérico positivo.
+              - type: string
+                pattern: '^\d{3}-\d{3}-\d{3}$'
+                description: ID formatado de pedido.
+          examples:
+            cpf:
+              summary: CPF sem máscara
+              value: '52998224725'
+            cnpj:
+              summary: CNPJ sem máscara
+              value: '11222333000181'
+            numericId:
+              summary: ID numérico
+              value: '123'
+            formattedId:
+              summary: ID formatado
+              value: '089-918-476'
+      responses:
+        '200':
+          description: Consulta concluída com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrdersStatusResponse'
+              examples:
+                ordersFound:
+                  summary: Três pedidos encontrados
+                  value:
+                    data:
+                      - id: '089-918-476'
+                        status_name: Pagamento Pendente
+                        origin: site
+                      - id: '123'
+                        status_name: Pedido em produção
+                        origin: negev
+                      - id: '972-092-663'
+                        status_name: Não Pago
+                        origin: site
+                noOrders:
+                  summary: Nenhum pedido encontrado
+                  value:
+                    data: []
+        '401':
+          description: Token Bearer ausente ou inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponse'
+              example:
+                message: Unauthenticated.
+        '403':
+          description: Acesso não autorizado para este recurso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SimpleErrorResponse'
+        '422':
+          description: CPF, CNPJ ou ID inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              example:
+                message: The given data was invalid.
+                errors:
+                  valor:
+                    - O CPF informado é inválido.
+        '502':
+          description: Serviço temporariamente indisponível
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BadGatewayResponse'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      description: |
+        Token de acesso fornecido para o consumidor da API. Envie-o no cabeçalho
+        `Authorization: Bearer {token}`.
+  schemas:
+    OrdersStatusResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          maxItems: 3
+          items:
+            $ref: '#/components/schemas/OrderStatus'
+    OrderStatus:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - status_name
+        - origin
+      properties:
+        id:
+          type: string
+          description: Identificador do pedido.
+          example: '089-918-476'
+        status_name:
+          type: string
+          description: Nome atual do status do pedido.
+          example: Pagamento Pendente
+        origin:
+          type: string
+          description: Origem do pedido.
+          enum:
+            - site
+            - negev
+          example: site
+    SimpleErrorResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+    ValidationErrorResponse:
+      type: object
+      required:
+        - message
+        - errors
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          required:
+            - valor
+          properties:
+            valor:
+              type: array
+              items:
+                type: string
+    BadGatewayResponse:
+      type: object
+      required:
+        - data
+        - message
+        - metadata
+      properties:
+        data:
+          nullable: true
+          example: null
+        message:
+          type: string
+          description: Mensagem de indisponibilidade do serviço.
+        metadata:
+          nullable: true
+          example: null

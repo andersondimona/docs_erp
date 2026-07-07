@@ -3,27 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PDV Orders API - Documentação</title>
-  <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+
+  <title>Documentações ERP</title>
+
   <style>
-    body { margin: 0; background: #fafafa; }
-    .topbar { display: none; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: #f4f6f8;
+      color: #1f2937;
+    }
+
+    header {
+      background: #111827;
+      color: #ffffff;
+      padding: 32px 24px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    header p {
+      margin-top: 8px;
+      color: #d1d5db;
+      font-size: 16px;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      border-left: 5px solid #2563eb;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 22px;
+      color: #111827;
+    }
+
+    .card p {
+      color: #4b5563;
+      line-height: 1.5;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 10px 16px;
+      background: #2563eb;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+
+    .card a:hover {
+      background: #1d4ed8;
+    }
+
+    footer {
+      text-align: center;
+      color: #6b7280;
+      padding: 32px 24px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-  <div id="swagger-ui"></div>
 
-  <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
-  <script>
-    window.onload = () => {
-      window.ui = SwaggerUIBundle({
-        url: './orders.yaml',
-        dom_id: '#swagger-ui',
-        deepLinking: true,
-        presets: [SwaggerUIBundle.presets.apis],
-        layout: 'BaseLayout'
-      });
-    };
-  </script>
+  <header>
+    <h1>Documentações ERP</h1>
+    <p>Central de acesso às documentações das APIs e integrações internas</p>
+  </header>
+
+  <main>
+    <div class="grid">
+
+      <div class="card">
+        <h2>Consulta de Pedidos</h2>
+        <p>
+          Documentação da API para consulta de pedidos, filtros, status,
+          dados de venda e informações relacionadas.
+        </p>
+        <a href="./sellings.html">Acessar documentação</a>
+      </div>
+
+      <!-- <div class="card">
+        <h2>Pedidos PDV</h2>
+        <p>
+          Documentação relacionada aos pedidos do PDV, envio de dados,
+          retorno da API e integração com o ERP.
+        </p>
+        <a href="./pdv.html">Acessar documentação</a>
+      </div> -->
+
+      <div class="card">
+        <h2>Pedidos</h2>
+        <p>
+          Documentação geral de pedidos, endpoints disponíveis,
+          parâmetros obrigatórios e exemplos de retorno.
+        </p>
+        <a href="./orders.html">Acessar documentação</a>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    Documentação interna | ERP Dimona
+  </footer>
+
 </body>
 </html>
