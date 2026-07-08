@@ -110,6 +110,7 @@ paths:
                           total_discount: 500
                           total_down_payments: 3000
                           total: 11500
+                          total_quantity: 5
                           total_with_freight: 14000
                           in_progress_productions_ids:
                             - 301
@@ -820,6 +821,10 @@ components:
           type: integer
           description: Total do pedido em centavos, sem frete.
           example: 11500
+        total_quantity:
+          type: integer
+          description: Quantidade total de itens no pedido.
+          example: 5
         total_with_freight:
           type: integer
           description: Total do pedido em centavos, com frete.
